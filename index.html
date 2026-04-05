@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- SEO and Meta Tags -->
+    <title>e-mütevellit | Kişisel Seyahat ve Belgesel Günlüğü</title>
+    <meta name="description" content="Plansız rotalar, samimi hikayeler ve dünyanın renkleri üzerine kişisel bir arşiv. Gezi yazılarından belgesel tadındaki videolara kadar her içerik, e-mütevellit'in penceresinden dünyaya bir bakış." />
+    <meta name="author" content="e-mütevellit" />
+    <meta name="keywords" content="seyahat, gezi, belgesel, rota, seyahat günlüğü" />
+    
+    <!-- Open Graph for Social Media -->
+    <meta property="og:title" content="e-mütevellit | Kişisel Seyahat Arşivi" />
+    <meta property="og:description" content="Plansız rotalar ve samimi hikayeler." />
+    <meta property="og:type" content="website" />
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              serif: ['"Playfair Display"', 'serif'],
+              sans: ['"Inter"', 'sans-serif'],
+            },
+            colors: {
+              primary: '#2c3e50',
+              secondary: '#d35400', // Slightly darker/richer orange
+              surface: '#fcfcfc',
+              'surface-dark': '#f3f4f6',
+            },
+            animation: {
+              'fade-in': 'fadeIn 0.8s ease-out forwards',
+              'slide-up': 'slideUp 0.8s ease-out forwards',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              slideUp: {
+                '0%': { opacity: '0', transform: 'translateY(20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "react-router-dom": "https://esm.sh/react-router-dom@^7.12.0",
+    "react-markdown": "https://esm.sh/react-markdown@^10.1.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-surface text-gray-800 font-sans antialiased selection:bg-secondary selection:text-white">
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
