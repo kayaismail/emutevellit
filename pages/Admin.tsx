@@ -225,34 +225,35 @@ const Admin: React.FC = () => {
                     <div className="flex gap-2">
                         <input
                           type="text"
-                          placeholder="URL girin veya"
+                          placeholder="Görsel URL"
                           value={editingPost.imageUrl || ''}
                           onChange={(e) => setEditingPost({ ...editingPost, imageUrl: e.target.value })}
                           className="flex-grow p-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-secondary/20 focus:border-secondary"
                         />
-                        <input
-                          type="file"
-                          accept="image/*"
-                          id="image-upload"
-                          className="hidden"
-                          onChange={async (e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                              try {
-                                const url = await postService.uploadImage(file);
-                                setEditingPost({ ...editingPost, imageUrl: url });
-                              } catch (err: any) {
-                                setError(err.message || 'Resim yüklenemedi.');
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const widget = (window as any).cloudinary.createUploadWidget(
+                              {
+                                cloudName: 'dllehphzc',
+                                uploadPreset: 'emutevellit',
+                                folder: 'emutevellit',
+                                sources: ['local', 'url', 'camera'],
+                                multiple: false,
+                                language: 'tr',
+                              },
+                              (error: any, result: any) => {
+                                if (!error && result?.event === 'success') {
+                                  setEditingPost({ ...editingPost, imageUrl: result.info.secure_url });
+                                }
                               }
-                            }
+                            );
+                            widget.open();
                           }}
-                        />
-                        <label 
-                          htmlFor="image-upload"
                           className="flex items-center justify-center px-4 bg-gray-100 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-200 transition-colors whitespace-nowrap text-sm font-medium"
                         >
-                          Dosya Seç
-                        </label>
+                          Görsel Yükle
+                        </button>
                     </div>
                   </div>
                 </div>

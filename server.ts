@@ -6,28 +6,25 @@ import jwt from 'jsonwebtoken';
 import path from 'path';
 import fs from 'fs';
 import multer from 'multer';
+import { v2 as cloudinary } from 'cloudinary';
 
 const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT || 3001;
 const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key-for-dev';
 
+// Cloudinary config
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 app.use(cors());
 app.use(express.json());
 
-// Setup uploads directory
-const uploadsDir = path.join(process.cwd(), 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir);
-}
-app.use('/uploads', express.static(uploadsDir));
-
-// Multer Config
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, uploadsDir),
-  filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`.replace(/\s+/g, '-'))
-});
-const upload = multer({ storage });
+// Multer - memory storage (Cloudinary'e yükleyeceğiz)
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Authentication Middleware
 const authenticateToken = (req: any, res: any, next: any) => {
@@ -162,13 +159,24 @@ app.delete('/api/posts/:id', authenticateToken, async (req, res) => {
 });
 
 // --- UPLOAD ROUTE ---
-app.post('/api/upload', authenticateToken, upload.single('image'), (req, res) => {
+app.post('/api/upload', authenticateToken, upload.single('image'), async (req: any, res: any) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'Görsel yüklenemedi.' });
     }
-    const fileUrl = `/uploads/${req.file.filename}`;
-    res.status(201).json({ url: fileUrl });
+
+    // Upload to Cloudinary
+    const result = await new Promise<any>((resolve, reject) => {
+      cloudinary.uploader.upload_stream(
+        { folder: 'emutevellit' },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      ).end(req.file!.buffer);
+    });
+
+    res.status(201).json({ url: result.secure_url });
   } catch (error) {
     console.error('Upload error:', error);
     res.status(500).json({ error: 'Görsel yüklenirken sunucu hatası oluştu.' });
