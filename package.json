@@ -8,6 +8,8 @@
     "dev:client": "vite",
     "dev": "npx -y concurrently \"npm run dev:client\" \"npm run dev:server\"",
     "build": "vite build",
+    "start": "npx tsx server.ts",
+    "postinstall": "prisma generate",
     "preview": "vite preview",
     "lint": "tsc --noEmit"
   },
